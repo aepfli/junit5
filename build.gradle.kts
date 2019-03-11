@@ -349,6 +349,15 @@ subprojects {
 		}
 	}
 
+	sonarqube {
+		properties {
+			property ("sonar.jacoco.reportPaths", "build/jacoco/test.exec")
+			if (!(project in jacocoCoveredProjects)) {
+				property ("sonar.coverage.exclusions", "**/*")
+			}
+		}
+	}
+
 	afterEvaluate {
 		if (enableJaCoCo && project in jacocoCoveredProjects) {
 			val jarTask = (tasks.findByName("shadowJar") ?: tasks.jar.get()) as Jar
@@ -454,6 +463,17 @@ rootProject.apply {
 		}
 	}
 
+	sonarqube {
+		properties {
+			//.o -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=6405ce221514f081109da1c961d11ab5c5284038 -Dsonar.projectKey=alixwar_junit5 -Dsonar.organization=alixwar-github
+			property("sonar.host.url", "https://sonarcloud.io")
+			property("sonar.login", "6405ce221514f081109da1c961d11ab5c5284038")
+			property("sonar.projectKey", "alixwar_junit5")
+			property("sonar.organization", "alixwar-github")
+
+			property ("sonar.jacoco.reportPaths", "build/jacoco/jacocoMerge.exec")
+		}
+	}
 	tasks {
 		if (enableJaCoCo) {
 			val jacocoMerge by registering(JacocoMerge::class) {
